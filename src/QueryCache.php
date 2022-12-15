@@ -78,7 +78,8 @@ class QueryCache extends AbstractCache
 
         $query_hash = Utils::hash($query);
 
-        $this->key = "query-{$this->query_name}-${user_id}-{$query_hash}-${args_hash}";
+        $key = "query-{$this->query_name}-{$user_id}-{$query_hash}-{$args_hash}";
+        $this->key = apply_filters('graphql_cache_query_key', $key, $user_id, $this->query_name, $query, $variables);
 
         $this->read_cache();
 
