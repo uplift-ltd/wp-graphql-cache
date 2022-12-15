@@ -12,6 +12,13 @@ abstract class AbstractCache
     protected $zone = null;
 
     /**
+     * Whether this cache should be per user
+     * Defaults to true
+     * @var bool $per_user
+     */
+    protected $per_user = true;
+
+    /**
      * Expire cached value after given seconds
      */
     protected $expire = null;
@@ -39,6 +46,10 @@ abstract class AbstractCache
             $this->zone = 'default';
         } else {
             $this->zone = $config['zone'];
+        }
+
+        if (isset($config['per_user'])) {
+            $this->per_user = $config['per_user'];
         }
 
         $this->backend = $config['backend'] ?? null;
