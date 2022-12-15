@@ -30,6 +30,10 @@ class Utils
 
     static function log(string $msg, $data = null)
     {
+        if (!apply_filters('graphql_cache_logging', true)) {
+            return;
+        }
+
         if (null !== $data) {
             $msg .= ' ' . print_r($data, true);
         }
