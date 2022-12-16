@@ -120,7 +120,7 @@ class FieldCache extends AbstractCache
         $field_name = Utils::sanitize($this->field_name);
         $args_hash = Utils::hash(Utils::stable_string($args));
         $query_hash = Utils::hash($this->query);
-        $user_id = get_current_user_id();
+        $user_id = $this->per_user ? get_current_user_id() : $this->user_id_for_shared_cache;
 
         $key = "field-{$query_name}-{$field_name}-{$user_id}-{$query_hash}-{$args_hash}";
         $this->key = apply_filters('graphql_cache_field_key', $key, $user_id, $this->query_name, $this->query, $this->field_name, $args);

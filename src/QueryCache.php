@@ -69,8 +69,8 @@ class QueryCache extends AbstractCache
         if (empty($query)) {
             return;
         }
-        
-        $user_id = get_current_user_id();
+
+        $user_id = $this->per_user ? get_current_user_id() : $this->user_id_for_shared_cache;
 
         $args_hash = empty($variables)
             ? 'null'

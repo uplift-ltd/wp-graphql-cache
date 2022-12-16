@@ -12,6 +12,15 @@ abstract class AbstractCache
     protected $zone = null;
 
     /**
+     * Whether this cache should be per user; configure to false to share the cache
+     * Defaults to true
+     * @var bool $per_user
+     */
+    protected $per_user = true;
+
+    protected $user_id_for_shared_cache = 0;
+
+    /**
      * Expire cached value after given seconds
      */
     protected $expire = null;
@@ -39,6 +48,14 @@ abstract class AbstractCache
             $this->zone = 'default';
         } else {
             $this->zone = $config['zone'];
+        }
+
+        if (isset($config['per_user'])) {
+            $this->per_user = $config['per_user'];
+        }
+
+        if (isset($config['user_id_for_shared_cache'])) {
+            $this->user_id_for_shared_cache = $config['user_id_for_shared_cache'];
         }
 
         $this->backend = $config['backend'] ?? null;
