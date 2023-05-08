@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Extensions\Cache;
 
-use WPGraphQL\Request;class CacheManager
+use WPGraphQL\Request;
+
+class CacheManager
 {
     static $fields = [];
 
