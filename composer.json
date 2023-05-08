@@ -44,5 +44,8 @@
     "support": {
         "issues": "https://github.com/valu-digital/wp-graphql-cache/issues",
         "source": "https://github.com/valu-digital/wp-graphql-cache"
+    },
+    "require": {
+        "ext-json": "*"
     }
 }
