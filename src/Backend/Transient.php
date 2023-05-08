@@ -38,6 +38,8 @@ class Transient extends AbstractBackend
 	function get(string $zone, string $key): ?CachedValue
     {
 
+        $this->cached_value = null;
+
 		$transient_key = $this->get_transient_key($zone, $key);
 
 		$cached_value_serialized = get_transient($transient_key);
@@ -70,8 +72,11 @@ class Transient extends AbstractBackend
 
 		$zone_cache_keys = $this->get_keys_in_zone($zone);
 		foreach ($zone_cache_keys as $cache_key) {
-			$transient_key = $this->get_transient_key($zone, $cache_key);
-			$deleted = $deleted || $this->delete($zone, $transient_key);
+            if ($this->delete($zone, $cache_key)) {
+
+                $deleted = true;
+
+            }
 		}
 
 		return $deleted;
@@ -80,7 +85,7 @@ class Transient extends AbstractBackend
 
 	function clear(): bool
     {
-		
+
 		$deleted = false;
 
 		$zones = $this->get_zones();
@@ -122,7 +127,7 @@ class Transient extends AbstractBackend
 	protected function get_zones(): array
 	{
 
-		$zone_list_transient_key = $this->get_zone_list_transient_key($zone);
+		$zone_list_transient_key = $this->get_zone_list_transient_key();
 
 		$zone_list_transient_value = get_transient($zone_list_transient_key);
 		if (!$zone_list_transient_value || !is_array($zone_list_transient_value)) {
@@ -218,7 +223,7 @@ class Transient extends AbstractBackend
 
 		// Hash the real cache key to ensure the transient key will always be below the limit of 172 characters.
 		$transient_key = sprintf(
-			'wp-graphql-cache-%s',
+			'wp-graphql-cache-%s-%s',
 			md5($zone),
 			md5($cache_key)
 		);
