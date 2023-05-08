@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Extensions\Cache;
 
-use GraphQL\Executor\ExecutionResult;use GraphQL\Server\OperationParams;use GraphQL\Server\StandardServer;use WPGraphQL\Extensions\Cache\Backend\AbstractBackend;use WPGraphQL\Request;
+use GraphQL\Executor\ExecutionResult;
+use GraphQL\Server\OperationParams;
+use WPGraphQL\Extensions\Cache\Backend\AbstractBackend;
 
 /**
  * Class that takes care of caching of full queries
