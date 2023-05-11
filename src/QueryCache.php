@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Extensions\Cache;
 
-use GraphQL\Executor\ExecutionResult;
-use GraphQL\Server\OperationParams;
-use WPGraphQL\Extensions\Cache\Backend\AbstractBackend;
+use GraphQL\Executor\ExecutionResult;use GraphQL\Server\OperationParams;use GraphQL\Server\StandardServer;use WPGraphQL\Extensions\Cache\Backend\AbstractBackend;use WPGraphQL\Request;
 
 /**
  * Class that takes care of caching of full queries
@@ -61,6 +59,7 @@ class QueryCache extends AbstractCache
     {
 
         $query = $params->query;
+        $variables = $params->variables;
 
         if (empty($query)) {
             return $response;
@@ -72,13 +71,14 @@ class QueryCache extends AbstractCache
 
         $user_id = $this->per_user ? get_current_user_id() : 0;
 
-        $args_hash = empty($params->variables)
+        $args_hash = empty($variables)
             ? 'null'
-            : Utils::hash(Utils::stable_string($params->variables));
+            : Utils::hash(Utils::stable_string($variables));
 
         $query_hash = Utils::hash($query);
 
-        $this->key = "query-{$this->query_name}-{$user_id}-{$query_hash}-{$args_hash}";
+        $key = "query-{$this->query_name}-{$user_id}-{$query_hash}-{$args_hash}";
+        $this->key = apply_filters('graphql_cache_query_key', $key, $user_id, $this->query_name, $query, $variables);
 
         $this->read_cache();
 
@@ -90,7 +90,7 @@ class QueryCache extends AbstractCache
 
         Utils::log('MISS query cache: ' . $this->key);
 
-        $response = do_graphql_request($params->query, $params->operation, $params->variables);
+        $response = do_graphql_request($params->query, $params->operation, $variables);
 
         if (empty($response->errors)) {
 
